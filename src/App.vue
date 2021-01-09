@@ -16,6 +16,8 @@
 import TodoList from "@/components/TodoList";
 import TodoCreate from "@/components/TodoCreate";
 
+import store from "@/store/index";
+
 export default {
     name: "App",
     components: {
@@ -24,28 +26,15 @@ export default {
     },
     data() {
         return {
-            todos: [
-                {
-                    _id: "1",
-                    title: "Walk the dog",
-                    description: "Go to forrest near the Zoo",
-                },
-                {
-                    _id: "2",
-                    title: "Buy a bread",
-                    description: "Whole grain bread would be good",
-                },
-                {
-                    _id: "3",
-                    title: "Learn Programming",
-                    description: "Preferable Tomorrow!",
-                },
-            ],
+            todos: store.state.todos,
         };
+    },
+    created() {
+        this.todos = store.dispatch("initStore");
     },
     methods: {
         createTodo(todo) {
-            this.todos.push(todo);
+            store.dispatch("createTodo", todo);
         },
     },
 };
@@ -91,6 +80,14 @@ $color-red: red;
     background-color: #47ca47 !important;
 }
 
+.is-warning {
+    background-color: #ffa753 !important;
+}
+
+.is-danger {
+    background-color: #ff5a5a !important;
+}
+
 .app-button {
     font-size: 20px;
     padding: 10px;
@@ -125,7 +122,7 @@ $color-red: red;
         display: flex;
         flex-direction: column;
         width: 400px;
-        min-height: 400px;
+        min-height: 200px;
         background-color: #ededed;
         border-radius: 5px;
     }
