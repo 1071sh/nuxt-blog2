@@ -5,8 +5,8 @@
         </div>
         <div class="modal" :class="{ 'is-active': isOpen }">
             <div class="modal-content">
-                <span @click="isOpen = false" class="close">&times;</span>
-                <p>Modal Window</p>
+                <span @click="close" class="close">&times;</span>
+                <slot />
             </div>
         </div>
     </div>
@@ -14,10 +14,28 @@
 
 <script>
 export default {
+    // props: {
+    //     close: {
+    //         type: Boolean,
+    //         required: false,
+    //     },
+    // },
     data() {
         return {
             isOpen: false,
         };
+    },
+    watch: {
+        close(isClose) {
+            if (isClose && this.isOpen) {
+                this.isOpen = false;
+            }
+        },
+    },
+    methods: {
+        close() {
+            this.isOpen = false;
+        },
     },
 };
 </script>
@@ -57,5 +75,6 @@ export default {
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+    text-align: left;
 }
 </style>
