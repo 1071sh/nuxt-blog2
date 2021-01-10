@@ -19,6 +19,7 @@
                                         :subtitle="post.subtitle"
                                         :date="post.createdAt"
                                         :isRead="post.isRead"
+                                        :id="post._id"
                                     />
                                 </div>
                                 <div v-else>No Posts :(</div>
@@ -60,9 +61,15 @@ export default {
             return store.dispatch("post/fetchPosts");
         }
     },
+    mounted() {
+        this.$store.dispatch("post/getArchivedPosts");
+    },
     computed: {
         posts() {
             return this.$store.state.post.items;
+        },
+        archivedPosts() {
+            return this.$store.state.post.archivedItems;
         }
     },
     methods: {

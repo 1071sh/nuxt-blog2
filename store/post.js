@@ -11,7 +11,9 @@ export function fetchPostsAPI() {
 
 export const state = () => {
     return {
-        items: []
+        item: {},
+        items: [],
+        archivedItems: []
     };
 };
 
@@ -24,9 +26,45 @@ export const getters = {
 
 // Very good spot to send a request to a server. Usualy Actions resolve into some data
 export const actions = {
+    getArchivedPosts({ commit }) {
+        const archivedPosts = localStorage.getItem("archived_posts");
+        if (archivedPosts) {
+            commit("setArchivedPosts", JSON.parse(archivedPosts));
+            return archivedPosts;
+        } else {
+            localStorage.setItem("archived_posts", JSON.stringify([]));
+            return [];
+        }
+    },
+    togglePost({ state, commit, dispatch }, postId) {
+        if (state.archivedItems.includes(postId)) {
+            const index = state.archivedItems.findIndex(pId => pId === postId);
+            commit("removeArchivedPost", index);
+            dispatch("persistArchivedPosts");
+            return postId;
+        } else {
+            commit("addArchivedPost", postId);
+            dispatch("persistArchivedPosts");
+            return postId;
+        }
+    },
+    persistArchivedPosts({ state }) {
+        localStorage.setItem(
+            "archived_posts",
+            JSON.stringify(state.archivedItems)
+        );
+    },
     fetchPosts({ commit }) {
         return this.$axios.$get("/api/posts").then(posts => {
             commit("setPosts", posts);
+            return posts;
+        });
+    },
+    fetchPostById({ commit }, postId) {
+        return this.$axios.$get("/api/posts").then(posts => {
+            const selectedPost = posts.find(p => p._id === postId);
+            commit("setPost", selectedPost);
+            return selectedPost;
         });
     },
     createPost({ commit }, postData) {
@@ -71,8 +109,20 @@ export const actions = {
 // Mutations are simple functions that have access to a state.
 // Mutations are used to assign values to a state
 export const mutations = {
+    setArchivedPosts(state, archivedPosts) {
+        state.archivedItems = archivedPosts;
+    },
+    addArchivedPost(state, postId) {
+        state.archivedItems.push(postId);
+    },
+    removeArchivedPost(state, index) {
+        state.archivedItems.splice(index, 1);
+    },
     setPosts(state, posts) {
         state.items = posts;
+    },
+    setPost(state, post) {
+        state.item = post;
     },
     addPost(state, post) {
         state.items.push(post);
