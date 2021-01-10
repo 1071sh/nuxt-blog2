@@ -9,6 +9,7 @@
                     />
                 </a>
                 <div
+                    @click="toggleIsActive"
                     class="navbar-burger burger"
                     aria-label="menu"
                     aria-expanded="false"
@@ -19,26 +20,33 @@
                     <span></span>
                 </div>
             </div>
-            <div id="navMenu" class="navbar-menu">
+            <div
+                @click="toggleIsActive"
+                id="navMenu"
+                :class="{ 'is-active': isActive }"
+                class="navbar-menu"
+            >
                 <div class="navbar-end">
-                    <div class="navbar-item has-dropdown">
+                    <div
+                        :class="{ 'is-active': isActive }"
+                        class="navbar-item has-dropdown"
+                    >
                         <a class="navbar-link">
                             Menu
                         </a>
                         <div class="navbar-dropdown">
-                            <a class="navbar-item">
-                                Dashboard
-                            </a>
-                            <a class="navbar-item">
-                                Profile
-                            </a>
-                            <a class="navbar-item">
-                                Settings
-                            </a>
-                            <hr class="navbar-divider" />
-                            <div class="navbar-item">
-                                Logout
-                            </div>
+                            <nuxt-link to="/" class="navbar-item">
+                                Home
+                            </nuxt-link>
+                            <!-- <div
+                                @click="navigateTo('/manage')"
+                                class="navbar-item"
+                            >
+                                Manage
+                            </div> -->
+                            <nuxt-link to="/manage" class="navbar-item">
+                                Manage
+                            </nuxt-link>
                         </div>
                     </div>
                 </div>
@@ -46,3 +54,21 @@
         </div>
     </nav>
 </template>
+
+<script>
+export default {
+    data() {
+        return {
+            isActive: false
+        };
+    },
+    methods: {
+        navigateTo(path) {
+            this.$router.push(path);
+        },
+        toggleIsActive() {
+            this.isActive = !this.isActive;
+        }
+    }
+};
+</script>
