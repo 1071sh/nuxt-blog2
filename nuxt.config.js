@@ -1,4 +1,5 @@
-export default {
+module.exports = {
+    telemetry: false,
     // Global page headers (https://go.nuxtjs.dev/config-head)
     head: {
         title: "nuxt-posts",
@@ -37,6 +38,8 @@ export default {
     axios: {},
 
     // Build Configuration (https://go.nuxtjs.dev/config-build)
+    serverMiddleware: ["~server/routes/index"],
+
     build: {
         postcss: {
             preset: {

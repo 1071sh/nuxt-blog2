@@ -1,11 +1,11 @@
-import { INITIAL_DATA } from "./index";
+import INITIAL_DATA from "./initial_data.json";
 import Vue from "vue";
 
 export function fetchPostsAPI() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve(INITIAL_DATA.posts);
-        }, 200);
+        }, 0);
     });
 }
 
@@ -32,9 +32,14 @@ export const actions = {
     createPost({ commit }, postData) {
         postData._id = Math.random()
             .toString(36)
-            .substring(2, 7);
-        postData.createdAt = new Date();
-        commit("addPost", postData);
+            .substr(2, 7);
+        postData.createdAt = new Date().getTime();
+
+        return this.$axios.$post("/api/posts", postData).then(res => {
+            console.log(res);
+            commit("addPost", postData);
+            return postData;
+        });
     },
     updatePost({ commit, state }, postData) {
         const index = state.items.findIndex(post => {
@@ -42,7 +47,13 @@ export const actions = {
         });
 
         if (index !== -1) {
-            commit("replacePost", { post: postData, index });
+            return this.$axios
+                .$patch(`/api/posts/${postData._id}`, postData)
+                .then(res => {
+                    console.log(res);
+                    commit("replacePost", { post: postData, index });
+                    return postData;
+                });
         }
     }
 };
