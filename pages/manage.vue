@@ -4,21 +4,20 @@
         <div class="manage-page">
             <div class="columns mail-app">
                 <aside class="column is-2 aside hero">
-                    <div>
-                        <div class="compose has-text-centered">
-                            <a class="button is-danger is-block is-bold">
-                                <span class="compose">Create</span>
-                            </a>
-                        </div>
-                        <div class="main"></div>
-                    </div>
+                    <PostCreate />
                 </aside>
                 <div
                     class="column is-4 messages hero is-fullheight"
                     id="message-feed"
                 >
                     <div class="inbox-messages" id="inbox-messages">
-                        <div v-for="post in posts" :key="post._id" class="card">
+                        <div
+                            v-for="post in posts"
+                            :key="post._id"
+                            @click="activatePost(post)"
+                            :class="{ 'is-active': post._id == activePost._id }"
+                            class="card"
+                        >
                             <div class="card-content">
                                 <div class="msg-header">
                                     <span class="msg-from"
@@ -46,21 +45,11 @@
                     </div>
                 </div>
                 <div
-                    class="column is-6 message hero is-fullheight is-hidden"
+                    class="column is-6 message hero is-fullheight"
                     id="message-pane"
                 >
                     <div class="box message-preview">
-                        <div class="top">
-                            <div class="avatar">
-                                <img src="https://placehold.it/128x128" />
-                            </div>
-                            <div class="address">
-                                <div class="name">John Smith</div>
-                                <div class="email">someone@gmail.com</div>
-                            </div>
-                            <hr />
-                            <div class="content"></div>
-                        </div>
+                        <PostManage :postData="activePost" />
                     </div>
                 </div>
             </div>
@@ -94,34 +83,59 @@
 
 <script>
 import Navbar from "@/components/Navbar";
+import PostCreate from "@/components/PostCreate";
+import PostManage from "@/components/PostManage";
+
 import { mapState } from "vuex";
 
 export default {
     components: {
-        Navbar
+        Navbar,
+        PostCreate,
+        PostManage
+    },
+    data() {
+        return {
+            activePost: {}
+        };
     },
     fetch({ store }) {
         if (store.getters["post/hasEmptyItems"]) {
             return store.dispatch("post/fetchPosts");
         }
     },
+    created() {
+        if (this.posts && this.posts.length > 0) {
+            this.activePost = this.posts[0];
+        }
+    },
     computed: {
         ...mapState({
             posts: state => state.post.items
         })
+    },
+    methods: {
+        activatePost(post) {
+            this.activePost = post;
+        }
     }
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .manage-page {
     padding: 30px;
 }
 .card {
     margin-bottom: 10px;
-}
-.card:hover {
-    cursor: pointer;
-    background-color: #eeeeee;
+
+    &.is-active {
+        background: #eeeeee;
+    }
+
+    &:hover {
+        cursor: pointer;
+        background-color: #eeeeee;
+    }
 }
 </style>
