@@ -13,6 +13,7 @@
                     <keep-alive>
                         <component
                             :is="activeComponent"
+                            ref="activeComponent"
                             @stepUpdated="mergeFormData"
                         />
                     </keep-alive>
@@ -42,6 +43,7 @@
                                 </button>
                                 <button
                                     v-else
+                                    :disabled="!canProceed"
                                     @click="() => {}"
                                     class="button is-success is-large float-right"
                                 >
@@ -92,12 +94,19 @@ export default {
             return this.steps[this.activeStep - 1];
         },
     },
+    fetch({ store }) {
+        return store.dispatch("category/fetchCategories");
+    },
     methods: {
         nextStep() {
             this.activeStep++;
+            this.$nextTick(
+                () => (this.canProceed = this.$refs.activeComponent.isValid)
+            );
         },
         previousStep() {
             this.activeStep--;
+            this.canProceed = true;
         },
         mergeFormData({ data, isValid }) {
             this.form = { ...this.form, ...data };
