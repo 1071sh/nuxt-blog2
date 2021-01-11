@@ -112,9 +112,27 @@ export default {
             },
         },
     },
+    computed: {
+        isFormValid() {
+            return !this.$v.$invalid;
+        },
+    },
     methods: {
         login() {
             this.$v.form.$touch();
+
+            if (this.isFormValid) {
+                this.$store
+                    .dispatch("auth/login", this.form)
+                    .then(() => {
+                        this.$router.push("/");
+                    })
+                    .catch(() => {
+                        this.$toasted.error("Wrong email or password", {
+                            duration: 3000,
+                        });
+                    });
+            }
         },
     },
 };
