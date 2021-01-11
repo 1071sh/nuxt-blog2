@@ -3,7 +3,10 @@
         <InstructorHeader title="Create your courses">
             <template #actionMenu>
                 <div class="full-page-takeover-header-button">
-                    <nuxt-link to="#" class="button is-medium is-light">
+                    <nuxt-link
+                        to="/instructor/course/create"
+                        class="button is-medium is-light"
+                    >
                         New Course
                     </nuxt-link>
                     <nuxt-link
@@ -21,7 +24,11 @@
                     <div class="column is-8 is-offset-2">
                         <h1 class="courses-page-title">Your Courses</h1>
                         <!-- Iterate Courses -->
-                        <div class="tile is-ancestor">
+                        <div
+                            v-for="course in courses"
+                            :key="course._id"
+                            class="tile is-ancestor"
+                        >
                             <div class="tile is-parent is-12">
                                 <!-- Navigate to course manage page -->
                                 <nuxt-link
@@ -47,28 +54,23 @@
                                         </div>
                                         <div class="column">
                                             <p class="title">
-                                                Dart and Flutter From Zero to
-                                                Hero - Practical Dev Bootcamp
+                                                {{ course.title }}
                                             </p>
                                             <p class="subtitle">
-                                                Build real mobile Application
-                                                for Android and iOS. Learn Dart
-                                                Framework and discover amazing
-                                                features of Flutter.
+                                                {{ course.subtitle }}
                                             </p>
                                             <span
                                                 class="tag"
                                                 :class="'is-success'"
                                             >
-                                                Published
+                                                {{ course.status }}
                                             </span>
                                         </div>
                                         <div
                                             class="column is-narrow flex-centered"
                                         >
                                             <div class="price-title">
-                                                <!-- {{course.price || 0}} $ -->
-                                                178.99 $
+                                                {{ course.price || 0 }} $
                                             </div>
                                         </div>
                                     </div>
@@ -88,6 +90,14 @@ export default {
     layout: "instructor",
     components: {
         InstructorHeader,
+    },
+    computed: {
+        courses() {
+            return this.$store.state.instructor.course.items;
+        },
+    },
+    fetch({ store }) {
+        return store.dispatch("instructor/course/fetchInstructorCourses");
     },
 };
 </script>
