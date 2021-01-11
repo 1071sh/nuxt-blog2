@@ -31,7 +31,7 @@ module.exports = {
     /*
      ** Plugins to load before mounting the App
      */
-    plugins: [{ src: "~plugins/filters" }],
+    plugins: [{ src: "~plugins/filters" }, { src: "~plugins/vuelidate" }],
     /*
      ** Nuxt.js modules
      */
