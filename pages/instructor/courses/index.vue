@@ -47,7 +47,8 @@
                                             >
                                                 <img
                                                     :src="
-                                                        'https://i.udemycdn.com/course/750x422/2381802_d90c_3.jpg'
+                                                        course.image ||
+                                                            'https://via.placeholder.com/150'
                                                     "
                                                 />
                                             </figure>
@@ -57,11 +58,18 @@
                                                 {{ course.title }}
                                             </p>
                                             <p class="subtitle">
-                                                {{ course.subtitle }}
+                                                {{
+                                                    course.subtitle ||
+                                                        "No subtitle provided yet"
+                                                }}
                                             </p>
                                             <span
                                                 class="tag"
-                                                :class="'is-success'"
+                                                :class="
+                                                    createStatusClass(
+                                                        course.status
+                                                    )
+                                                "
                                             >
                                                 {{ course.status }}
                                             </span>
@@ -98,6 +106,15 @@ export default {
     },
     fetch({ store }) {
         return store.dispatch("instructor/course/fetchInstructorCourses");
+    },
+    methods: {
+        createStatusClass(status) {
+            if (!status) return "";
+            if (status === "published") return "is-success";
+            if (status === "active") return "is-primary";
+            if (status === "inactive") return "is-warning";
+            if (status === "deleted") return "is-danger";
+        },
     },
 };
 </script>

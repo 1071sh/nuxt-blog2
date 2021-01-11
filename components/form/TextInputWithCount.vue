@@ -8,7 +8,9 @@
             placeholder="e.g. Amazing Course in Flutter!"
             class="input is-large"
         />
-        <span class="icon is-small is-right">{{ remainingLength }}</span>
+        <span class="icon is-small is-right">
+            {{ remainingLength }}
+        </span>
     </div>
 </template>
 
@@ -47,7 +49,7 @@ export default {
     methods: {
         emitInputValue($event) {
             this.currentValue = $event.target.value;
-            this.$emit("input", $event.target.value);
+            this.$emit("input", this.currentValue);
         },
     },
 };

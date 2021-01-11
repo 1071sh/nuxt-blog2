@@ -15,9 +15,9 @@ export const getters = {
 };
 
 export const actions = {
-    login({ commit }, loginData) {
+    login({ commit, state }, loginData) {
         return this.$axios
-            .$post("api/v1/users/login", loginData)
+            .$post("/api/v1/users/login", loginData)
             .then((user) => {
                 commit("setAuthUser", user);
                 return state.user;
@@ -28,8 +28,8 @@ export const actions = {
         return this.$axios
             .$post("/api/v1/users/register", registerData)
             .catch((error) => {
-                const errorMessage =
-                    "Uuups,something went wrong,try to register again!";
+                let errorMessage =
+                    "Uuups, something went wrong, try to register again!";
                 if (error.response.data.errors) {
                     errorMessage = error.response.data.errors.message;
                 }

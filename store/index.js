@@ -7,7 +7,7 @@ export const mutations = {
 export const actions = {
     async nuxtServerInit({ commit, dispatch }) {
         await dispatch("auth/getAuthUser").catch(() =>
-            console.log("Not Allowd")
+            console.log("Not Authenticated!")
         );
     },
 };
