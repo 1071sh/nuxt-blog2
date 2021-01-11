@@ -1,4 +1,5 @@
 module.exports = {
+    mode: "universal",
     telemetry: false,
     /*
      ** Headers of the page
@@ -30,7 +31,7 @@ module.exports = {
     /*
      ** Plugins to load before mounting the App
      */
-    plugins: [],
+    plugins: [{ src: "~plugins/filters" }],
     /*
      ** Nuxt.js modules
      */
