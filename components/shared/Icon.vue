@@ -1,5 +1,5 @@
 <template>
-    <i class="icon fas" :class="[`fa-${name}`, `icon-size=${size}`]"></i>
+    <i class="icon fas" :class="[`fa-${name}`, `icon-size-${size}`]"></i>
 </template>
 
 <script>
