@@ -48,13 +48,22 @@
                         ></textarea>
                     </div>
                 </div>
-                <!-- category for later -->
                 <div class="field">
                     <label class="label">Category</label>
                     <div class="select is-medium">
-                        <select>
-                            <option value="default">Select Category</option>
-                            <!-- <option> </option> -->
+                        <select
+                            :value="course.category._id"
+                            @change="
+                                ($event) => emitCourseValue($event, 'category')
+                            "
+                        >
+                            <option
+                                v-for="category in categories"
+                                :key="category._id"
+                                :value="category._id"
+                            >
+                                {{ category.name }}
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -124,9 +133,29 @@ export default {
             required: true,
         },
     },
+    computed: {
+        categories() {
+            return this.$store.state.category.items;
+        },
+    },
     methods: {
         emitCourseValue(e, field) {
-            this.$emit("courseValueUpdated", { value: e.target.value, field });
+            const value = e.target.value;
+
+            if (field === "category") {
+                return this.emitCategory(value, field);
+            }
+
+            this.$emit("courseValueUpdated", { value, field });
+        },
+        emitCategory(categoryId, field) {
+            const foundCategory = this.categories.find(
+                (c) => c._id === categoryId
+            );
+            this.$emit("courseValueUpdated", {
+                value: foundCategory,
+                field,
+            });
         },
     },
 };

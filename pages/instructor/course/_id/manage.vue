@@ -7,7 +7,8 @@
             <template #actionMenu>
                 <div class="full-page-takeover-header-button">
                     <button
-                        @click="() => {}"
+                        @click="updateCourse"
+                        :disabled="!canUpdateCourse"
                         class="button is-primary is-inverted is-medium is-outlined"
                     >
                         Save
@@ -102,15 +103,35 @@ export default {
             steps: ["TargetStudents", "LandingPage", "Price", "Status"],
         };
     },
-    fetch({ store, params }) {
-        return store.dispatch("instructor/course/fetchCourseById", params.id);
+    async fetch({ store, params }) {
+        await store.dispatch("instructor/course/fetchCourseById", params.id);
+        await store.dispatch("category/fetchCategories");
     },
     computed: {
         ...mapState({
             course: ({ instructor }) => instructor.course.item,
+            canUpdateCourse: ({ instructor }) =>
+                instructor.course.canUpdateCourse,
         }),
     },
     methods: {
+        updateCourse() {
+            this.$store
+                .dispatch("instructor/course/updateCourse")
+                .then(() =>
+                    this.$toasted.success(
+                        "Course has been succefuly updated!",
+                        {
+                            duration: 3000,
+                        }
+                    )
+                )
+                .catch((error) =>
+                    this.$toasted.error("Course cannot be updated!", {
+                        duration: 3000,
+                    })
+                );
+        },
         handleCourseUpdate({ value, field }) {
             this.$store.dispatch("instructor/course/updateCourseValue", {
                 field,
