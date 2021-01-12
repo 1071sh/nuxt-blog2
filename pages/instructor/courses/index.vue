@@ -32,7 +32,9 @@
                             <div class="tile is-parent is-12">
                                 <!-- Navigate to course manage page -->
                                 <nuxt-link
-                                    :to="'#'"
+                                    :to="
+                                        `/instructor/course/${course._id}/manage`
+                                    "
                                     class="tile tile-overlay-container is-child box"
                                 >
                                     <div class="tile-overlay">
