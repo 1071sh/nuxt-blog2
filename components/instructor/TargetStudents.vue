@@ -7,31 +7,55 @@
         </header>
         <div class="card-content card-section">
             <form>
-                <div class="field">
-                    <div class="control">
-                        <input
-                            class="input is-large"
-                            type="text"
-                            placeholder="What will students learn in your course ?"
-                        />
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="control">
-                        <input
-                            class="input is-large"
-                            type="text"
-                            placeholder="What are the requirements for the course ?"
-                        />
-                    </div>
-                </div>
+                <MultiLineTextInput
+                    @addClicked="addLine('wsl')"
+                    @removeClicked="removeLine($event, 'wsl')"
+                    @valueUpdated="updateLine($event, 'wsl')"
+                    :lines="course.wsl"
+                    label="What will students learn"
+                />
+                <MultiLineTextInput
+                    @addClicked="addLine('requirements')"
+                    @removeClicked="removeLine($event, 'requirements')"
+                    @valueUpdated="updateLine($event, 'requirements')"
+                    :lines="course.requirements"
+                    label="What are the requirements"
+                />
             </form>
         </div>
     </div>
 </template>
 
 <script>
-export default {};
-</script>
+import MultiLineTextInput from "@/components/form/MultiLineTextInput";
 
-<style></style>
+export default {
+    components: {
+        MultiLineTextInput,
+    },
+    props: {
+        course: {
+            type: Object,
+            required: true,
+        },
+    },
+    methods: {
+        addLine(field) {
+            this.$store.commit("instructor/course/addLine", field);
+        },
+        removeLine(index, field) {
+            this.$store.commit("instructor/course/removeLine", {
+                field,
+                index,
+            });
+        },
+        updateLine({ value, index }, field) {
+            this.$store.dispatch("instructor/course/updateLine", {
+                field,
+                value,
+                index,
+            });
+        },
+    },
+};
+</script>

@@ -7,7 +7,10 @@
             <div class="field">
                 <label class="label">Status</label>
                 <div class="select is-medium">
-                    <select>
+                    <select
+                        :value="course.status"
+                        @change="($event) => emitCourseValue($event, 'status')"
+                    >
                         <option value="default">
                             Change Status
                         </option>
@@ -25,7 +28,17 @@
 </template>
 
 <script>
-export default {};
+export default {
+    props: {
+        course: {
+            type: Object,
+            required: true,
+        },
+    },
+    methods: {
+        emitCourseValue(e, field) {
+            this.$emit("courseValueUpdated", { value: e.target.value, field });
+        },
+    },
+};
 </script>
-
-<style></style>

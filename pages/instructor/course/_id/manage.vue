@@ -71,12 +71,12 @@
                     </div>
                     <div class="column">
                         <keep-alive>
-                            <component :is="activeComponent"></component>
+                            <Component
+                                @courseValueUpdated="handleCourseUpdate"
+                                :is="activeComponent"
+                                :course="course"
+                            />
                         </keep-alive>
-                        <TargetStudents />
-                        <LandingPage />
-                        <Price />
-                        <Status />
                     </div>
                 </div>
             </div>
@@ -90,27 +90,32 @@ import LandingPage from "@/components/instructor/LandingPage";
 import TargetStudents from "@/components/instructor/TargetStudents";
 import Price from "@/components/instructor/Price";
 import Status from "@/components/instructor/Status";
+import MultiComponentMixin from "@/mixins/MultiComponentMixin";
+import { mapState } from "vuex";
 
 export default {
     layout: "instructor",
     components: { Header, LandingPage, TargetStudents, Price, Status },
+    mixins: [MultiComponentMixin],
     data() {
         return {
             steps: ["TargetStudents", "LandingPage", "Price", "Status"],
-            activeStep: 1,
         };
     },
+    fetch({ store, params }) {
+        return store.dispatch("instructor/course/fetchCourseById", params.id);
+    },
     computed: {
-        activeComponent() {
-            return this.steps[this.activeStep - 1];
-        },
+        ...mapState({
+            course: ({ instructor }) => instructor.course.item,
+        }),
     },
     methods: {
-        navigateTo(step) {
-            this.activeStep = step;
-        },
-        activeComponentClass(step) {
-            return this.activeStep === step ? "is-active" : "";
+        handleCourseUpdate({ value, field }) {
+            this.$store.dispatch("instructor/course/updateCourseValue", {
+                field,
+                value,
+            });
         },
     },
 };
