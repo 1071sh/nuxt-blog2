@@ -3,7 +3,7 @@
         <Header title="Write your Blogs" exitLink="/instructor/blogs" />
         <div class="blog-editor-container">
             <div class="container">
-                <Editor />
+                <Editor @editorUpdated="saveBlog" />
             </div>
         </div>
     </div>
@@ -19,10 +19,14 @@ export default {
         Header,
         Editor,
     },
+    methods: {
+        saveBlog(blogData) {
+            this.$store
+                .dispatch("instructor/blog/createBlog", blogData)
+                .then((blog) =>
+                    this.$router.push(`/instructor/blog/${blog._id}/edit`)
+                );
+        },
+    },
 };
 </script>
-<style lang="scss">
-.blog-editor-container {
-    padding-top: 60px;
-}
-</style>
