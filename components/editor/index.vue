@@ -4,6 +4,7 @@
             <template #saveButton>
                 <button
                     @click="emitUpdate"
+                    :disabled="isSaving"
                     class="button is-success button-save"
                 >
                     Save
@@ -51,6 +52,12 @@ export default {
         BubbleMenu,
         BasicMenu,
     },
+    props: {
+        isSaving: {
+            required: false,
+            default: false,
+        },
+    },
     data() {
         return {
             editor: null,
@@ -81,7 +88,6 @@ export default {
                 new Bold(),
                 new Code(),
                 new Italic(),
-                new Link(),
                 new Strike(),
                 new Underline(),
                 new History(),
