@@ -70,7 +70,11 @@
     </div>
 </template>
 <script>
-export default {};
+export default {
+    async fetch({ store }) {
+        await store.dispatch("blog/fetchBlogs");
+    },
+};
 </script>
 <style scoped>
 .post-content {

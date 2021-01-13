@@ -37,7 +37,7 @@
                                     :key="dBlog._id"
                                     class="blog-card"
                                 >
-                                    <h2>{{ dBlog.title }}</h2>
+                                    <h2>{{ displayBlogTitle(dBlog) }}</h2>
                                     <div class="blog-card-footer">
                                         <span>
                                             Last Edited
@@ -46,7 +46,12 @@
                                                     | formatDate("LLLL")
                                             }}
                                         </span>
-                                        <Dropdown :items="draftsOptions" />
+                                        <Dropdown
+                                            @optionChanged="
+                                                handleOption($event, dBlog)
+                                            "
+                                            :items="draftsOptions"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +67,7 @@
                                     :key="pBlog._id"
                                     class="blog-card"
                                 >
-                                    <h2>{{ pBlog.title }}</h2>
+                                    <h2>{{ displayBlogTitle(pBlog) }}</h2>
                                     <div class="blog-card-footer">
                                         <span>
                                             Last Edited
@@ -71,7 +76,12 @@
                                                     | formatDate("LLLL")
                                             }}
                                         </span>
-                                        <Dropdown :items="publishedOptions" />
+                                        <Dropdown
+                                            @optionChanged="
+                                                handleOption($event, pBlog)
+                                            "
+                                            :items="publishedOptions"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -93,6 +103,7 @@ import { mapState } from "vuex";
 import {
     createPublishedOptions,
     createDraftsOptions,
+    commands,
 } from "@/pages/instructor/options";
 
 export default {
@@ -117,6 +128,33 @@ export default {
     },
     async fetch({ store }) {
         await store.dispatch("instructor/blog/fetchUserBlogs");
+    },
+    methods: {
+        handleOption(command, blog) {
+            if (command === commands.EDIT_BLOG) {
+                this.$router.push(`/instructor/blog/${blog._id}/edit`);
+            }
+            if (command === commands.DELETE_BLOG) {
+                this.displayDeleteWarning(blog);
+            }
+        },
+        displayDeleteWarning(blog) {
+            const isConfirm = confirm("Are you sure you want to delete blog ?");
+            if (isConfirm) {
+                this.$store
+                    .dispatch("instructor/blog/deleteBlog", blog)
+                    .then((_) =>
+                        this.$toasted.success("Blog was succesfuly deleted!", {
+                            duration: 2000,
+                        })
+                    );
+            }
+        },
+        displayBlogTitle(blog) {
+            return (
+                blog.title || blog.subtitle || "Blog without title& subtitle :("
+            );
+        },
     },
 };
 </script>
