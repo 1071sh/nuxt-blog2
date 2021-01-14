@@ -11,7 +11,7 @@
             <figure class="image is-48x48 m-r-sm">
                 <img class="is-rounded" :src="user.avatar" />
             </figure>
-            <div class="m-r-sm m-b-sm">Welcome {{ user.username }}!</div>
+            <div class="m-r-sm">Welcome {{ user.username }}!</div>
         </div>
         <slot name="actionMenu"></slot>
         <div v-if="exitLink" class="full-page-takeover-header-button">
@@ -48,7 +48,6 @@ export default {
 .user-box {
     align-items: center;
     display: flex;
-    flex-wrap: wrap;
     justify-content: flex-start;
     margin-right: 10px;
     font-size: 17px;

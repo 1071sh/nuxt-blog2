@@ -20,9 +20,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .is-active {
-    border-bottom: 4px solid #4bacff;
+    border-bottom: 4px solid $primary;
     font-weight: bold;
 }
 </style>

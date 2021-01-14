@@ -29,6 +29,9 @@ module.exports = {
      ** Global CSS
      */
     css: ["@/assets/scss/main.scss"],
+    styleResources: {
+        scss: ["@/assets/scss/variables.scss"],
+    },
     /*
      ** Plugins to load before mounting the App
      */
@@ -48,6 +51,7 @@ module.exports = {
         // Doc: https://axios.nuxtjs.org/usage
         "@nuxtjs/axios",
         "portal-vue/nuxt",
+        "@nuxtjs/style-resources",
     ],
     /*
      ** Axios module configuration
