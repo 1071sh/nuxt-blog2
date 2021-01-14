@@ -1,5 +1,6 @@
 export const state = () => ({
     items: [],
+    item: {},
 });
 
 export const actions = {
@@ -12,5 +13,20 @@ export const actions = {
             );
             return state.items;
         });
+    },
+    fetchCourseBySlug({ commit, state }, courseSlug) {
+        return this.$axios
+            .$get(`/api/v1/products/s/${courseSlug}`)
+            .then((course) => {
+                commit("setCourse", course);
+                return state.course;
+            })
+            .catch((error) => Promise.reject(error));
+    },
+};
+
+export const mutations = {
+    setCourse(state, course) {
+        state.item = course;
     },
 };

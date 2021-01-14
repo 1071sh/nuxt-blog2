@@ -36,7 +36,7 @@
                 <div class="field">
                     <label class="label">Course description</label>
                     <div class="control">
-                        <textarea
+                        <!-- <textarea
                             :value="course.description"
                             @input="
                                 ($event) =>
@@ -45,7 +45,14 @@
                             class="textarea is-medium"
                             type="text"
                             placeholder="Write something catchy about the course"
-                        ></textarea>
+                        ></textarea> -->
+                        <CourseEditor
+                            @editorUpdated="
+                                (content) =>
+                                    emitCourseValue(content, 'description')
+                            "
+                            :initialContent="course.description"
+                        />
                     </div>
                 </div>
                 <div class="field">
@@ -126,7 +133,12 @@
     </div>
 </template>
 <script>
+import CourseEditor from "@/components/editor/CourseEditor";
+
 export default {
+    components: {
+        CourseEditor,
+    },
     props: {
         course: {
             type: Object,
@@ -140,7 +152,7 @@ export default {
     },
     methods: {
         emitCourseValue(e, field) {
-            const value = e.target.value;
+            const value = e.target ? e.target.value : e;
 
             if (field === "category") {
                 return this.emitCategory(value, field);
