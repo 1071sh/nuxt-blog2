@@ -29,7 +29,12 @@
                         </div>
                         <!-- end of blog -->
                         <!-- pagination -->
-                        <div class="section">
+                        <div
+                            v-if="
+                                pagination.pageCount && pagination.pageCount > 1
+                            "
+                            class="section"
+                        >
                             <no-ssr placeholder="Loading...">
                                 <paginate
                                     v-model="currentPage"
@@ -90,23 +95,37 @@ export default {
             },
         },
     },
-    async fetch({ store }) {
-        const fileter = {};
-        fileter.pageNum = 1;
-        fileter.pageSize = 2;
+    async fetch({ store, query }) {
+        const filter = {};
+        const { pageNum, pageSize } = query;
 
-        await store.dispatch("blog/fetchBlogs", fileter);
+        if (pageNum && pageSize) {
+            filter.pageNum = parseInt(pageNum, 10);
+            filter.pageSize = parseInt(pageSize, 10);
+            store.commit("blog/setPage", filter.pageNum);
+        } else {
+            filter.pageNum = store.state.blog.pagination.pageNum;
+            filter.pageSize = store.state.blog.pagination.pageSize;
+        }
+
+        await store.dispatch("blog/fetchBlogs", filter);
         await store.dispatch("blog/fetchFeaturedBlogs", {
             "filter[featured]": true,
         });
     },
     methods: {
+        setQueryPaginationParams() {
+            const { pageSize, pageNum } = this.pagination;
+            this.$router.push({ query: { pageNum, pageSize } });
+        },
         fetchBlogs() {
             const filter = {};
             filter.pageSize = this.pagination.pageSize;
             filter.pageNum = this.pagination.pageNum;
 
-            this.$store.dispatch("blog/fetchBlogs", filter);
+            this.$store
+                .dispatch("blog/fetchBlogs", filter)
+                .then((_) => this.setQueryPaginationParams());
         },
     },
 };

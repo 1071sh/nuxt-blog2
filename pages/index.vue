@@ -18,9 +18,13 @@
         <section class="section">
             <div class="container">
                 <h1 class="title">Featured Articles</h1>
-                <div class="columns">
-                    <div class="column is-one-quarter">
-                        <BlogCard />
+                <div class="columns is-multiline">
+                    <div
+                        v-for="blog in featuredBlogs"
+                        :key="blog._id"
+                        class="column is-one-quarter"
+                    >
+                        <BlogCard :blog="blog" />
                     </div>
                 </div>
             </div>
@@ -39,10 +43,14 @@ export default {
     computed: {
         ...mapState({
             courses: (state) => state.course.items,
+            featuredBlogs: (state) => state.blog.items.featured,
         }),
     },
     async fetch({ store }) {
         await store.dispatch("course/fetchCourses");
+        await store.dispatch("blog/fetchFeaturedBlogs", {
+            "filter[featured]": true,
+        });
     },
 };
 </script>
