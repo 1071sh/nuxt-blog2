@@ -18,6 +18,18 @@ import UserTitle from "@/components/shared/UserTitle";
 import EditorView from "@/components/editor/EditorView";
 
 export default {
+    head() {
+        return {
+            title: this.blog.title,
+            meta: [
+                {
+                    hid: "description",
+                    name: "description",
+                    content: this.blog.subtitle,
+                },
+            ],
+        };
+    },
     components: {
         UserTitle,
         EditorView,
