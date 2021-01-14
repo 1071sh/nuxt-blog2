@@ -52,7 +52,9 @@ export const actions = {
             })
             .catch((error) => Promise.reject(error));
     },
-
+    updatePublishedBlog(blog) {
+        alert("FEATURE");
+    },
     updateBlog({ commit, state }, { data, id }) {
         commit("setIsSaving", true);
         return this.$axios

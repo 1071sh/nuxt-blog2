@@ -20,7 +20,7 @@
                             <!-- Check for error -->
                             <div v-if="!publishError">
                                 <div class="subtitle">
-                                    This is how url to blog post will look lile
+                                    This is how url to blog post will look like
                                     after publish:
                                 </div>
                                 <article class="message is-success">
@@ -134,7 +134,7 @@ export default {
             blogContent.status = status;
 
             const message =
-                status === "publish"
+                status === "published"
                     ? "Blog has been published!"
                     : "Blog has been un-published!";
 
@@ -143,35 +143,10 @@ export default {
                     data: blogContent,
                     id: this.blog._id,
                 })
-                .then(
-                    (_) =>
-                        this.$toasted.success(message, {
-                            duration: 3000,
-                        }),
-                    closeModal()
-                )
-                .catch((error) =>
-                    this.$toasted.error("Blog cannot be published!", {
-                        duration: 3000,
-                    })
-                );
-        },
-        unPublishBlog({ closeModal }) {
-            const blogContent = this.editor.getContent();
-            blogContent.status = "active";
-
-            this.$store
-                .dispatch("instructor/blog/updateBlog", {
-                    data: blogContent,
-                    id: this.blog._id,
+                .then((_) => {
+                    this.$toasted.success(message, { duration: 3000 });
+                    closeModal();
                 })
-                .then(
-                    (_) =>
-                        this.$toasted.success("Blog has been published!", {
-                            duration: 3000,
-                        }),
-                    closeModal()
-                )
                 .catch((error) =>
                     this.$toasted.error("Blog cannot be published!", {
                         duration: 3000,
