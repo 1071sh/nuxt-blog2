@@ -17,6 +17,17 @@ export const actions = {
             })
             .catch((error) => Promise.reject(error));
     },
+    fetchFeaturedBlogs({ commit, state }, filter) {
+        const url = this.$applyParamsToUrl("/api/v1/blogs", filter);
+        return this.$axios
+            .$get(url)
+            .then((data) => {
+                const { blogs } = data;
+                commit("setBlogs", { resource: "featured", blogs });
+                return state.items.featured;
+            })
+            .catch((error) => Promise.reject(error));
+    },
     fetchBlogBySlug({ commit, state }, slug) {
         return this.$axios
             .$get(`/api/v1/blogs/s/${slug}`)

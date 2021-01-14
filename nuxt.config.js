@@ -35,6 +35,7 @@ module.exports = {
     plugins: [
         { src: "~plugins/filters" },
         { src: "~plugins/vuelidate" },
+        { src: "~plugins/integrations" },
         { src: "~plugins/toasted", ssr: false },
     ],
     /*

@@ -42,9 +42,12 @@
                                 </div>
                                 <div class="sidebar-list">
                                     <!-- Featured Blogs -->
-                                    <p>
-                                        <nuxt-link :to="``">
-                                            Some favorite blog
+                                    <p
+                                        v-for="fBlog in featuredBlogs"
+                                        :key="fBlog._id"
+                                    >
+                                        <nuxt-link :to="`/blogs/${fBlog.slug}`">
+                                            {{ fBlog.title }}
                                         </nuxt-link>
                                     </p>
                                     <!-- Featured Blogs -->
@@ -64,10 +67,16 @@ export default {
     computed: {
         ...mapState({
             publishedBlogs: (state) => state.blog.items.all,
+            featuredBlogs: (state) => state.blog.items.featured,
         }),
     },
     async fetch({ store }) {
         await store.dispatch("blog/fetchBlogs");
+        await store.dispatch("blog/fetchFeaturedBlogs", {
+            "filter[featured]": true,
+            dog: "Fluggy",
+            cat: "Tom",
+        });
     },
 };
 </script>
