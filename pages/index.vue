@@ -1,10 +1,15 @@
 <template>
     <div>
-        <Hero />
+        <Hero
+            :title="courseHero.title"
+            :subtitle="courseHero.subtitle"
+            :image="courseHero.image"
+            :promoLink="courseHero.product && courseHero.product.productLink"
+        />
         <section class="section">
             <div class="container">
                 <h1 class="title">Featured Courses</h1>
-                <div class="columns">
+                <div class="columns is-multiline">
                     <div
                         v-for="course in courses"
                         :key="course._id"
@@ -44,6 +49,7 @@ export default {
         ...mapState({
             courses: (state) => state.course.items,
             featuredBlogs: (state) => state.blog.items.featured,
+            courseHero: (state) => state.hero.item,
         }),
     },
     async fetch({ store }) {
