@@ -29,7 +29,18 @@
                         </div>
                         <!-- end of blog -->
                         <!-- pagination -->
-                        <div class="section"></div>
+                        <div class="section">
+                            <no-ssr placeholder="Loading...">
+                                <paginate
+                                    v-model="currentPage"
+                                    :page-count="pagination.pageCount"
+                                    :click-handler="fetchBlogs"
+                                    :prev-text="'Prev'"
+                                    :next-text="'Next'"
+                                    :container-class="'paginationContainer'"
+                                ></paginate>
+                            </no-ssr>
+                        </div>
                         <!-- end of pagination -->
                     </div>
                     <!-- side bar -->
@@ -68,15 +79,35 @@ export default {
         ...mapState({
             publishedBlogs: (state) => state.blog.items.all,
             featuredBlogs: (state) => state.blog.items.featured,
+            pagination: (state) => state.blog.pagination,
         }),
+        currentPage: {
+            get() {
+                return this.$store.state.blog.pagination.pageNum;
+            },
+            set(value) {
+                this.$store.commit("blog/setPage", value);
+            },
+        },
     },
     async fetch({ store }) {
-        await store.dispatch("blog/fetchBlogs");
+        const fileter = {};
+        fileter.pageNum = 1;
+        fileter.pageSize = 2;
+
+        await store.dispatch("blog/fetchBlogs", fileter);
         await store.dispatch("blog/fetchFeaturedBlogs", {
             "filter[featured]": true,
-            dog: "Fluggy",
-            cat: "Tom",
         });
+    },
+    methods: {
+        fetchBlogs() {
+            const filter = {};
+            filter.pageSize = this.pagination.pageSize;
+            filter.pageNum = this.pagination.pageNum;
+
+            this.$store.dispatch("blog/fetchBlogs", filter);
+        },
     },
 };
 </script>
